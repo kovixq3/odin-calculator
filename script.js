@@ -1,37 +1,32 @@
-function add(a, b) {
-    return a + b;
-}
-
-function subtract(a, b) {
-    return a - b;
-}
-
-function multiply(a, b) {
-    return a * b;
-}
-
-function divide(a, b) {
-    return a / b;
-}
-
 function operate(o, a, b) {
-    let temp;
+    if (a === '' || b === '') return;
+    a = parseInt(a);
+    b = parseInt(b);
+    
+    let solution;
     switch (o) {
         case 'add':
-            temp = add(a, b);
+            solution = a + b;
             break;
         case 'subtract':
-            temp = subtract(a, b);
+            solution = a - b;
             break;
         case 'multiply':
-            temp = multiply(a, b);
-        case 'divide':
-            temp = divide(a, b);
-        default:
+            solution = a * b;
             break;
+        case 'divide':
+            if (b == 0) {
+                display.textContent = 'whoaaaa u can\'t do that';
+                operator = valuePassive = valueActive = '';
+                return;
+            }
+            solution = a / b;
+            break;
+        default:
+            return;
     }
     display.textContent = operator = valuePassive = valueActive = '';
-    display.textContent = temp;
+    display.textContent = valuePassive = solution;
 }
 
 let operator = valuePassive = valueActive = '';
@@ -48,16 +43,12 @@ numpad.forEach(e => e.addEventListener('click', () => {
 }));
 
 functions.forEach(e => e.addEventListener('click', () => {
-    valuePassive = valueActive;
-    valueActive = '';
+    if (valuePassive == '' && valueActive == '') return;
+    (valuePassive === '') ? valuePassive = valueActive : operate(operator, valuePassive, valueActive);
     operator = e.id;
-    display.textContent += ` ${e.textContent} `;
-}))
+    valueActive = '';
+    display.textContent = `${valuePassive} ${e.textContent} `;
+}));
 
-equal.addEventListener('click', () => {
-    valuePassive = parseInt(valuePassive);
-    valueActive = parseInt(valueActive);
-    operate(operator, valuePassive, valueActive);
-})
-
+equal.addEventListener('click', () => (valueActive !== '') ? operate(operator, valuePassive, valueActive) : null);
 clear.addEventListener('click', () => display.textContent = operator = valuePassive = valueActive = '');
